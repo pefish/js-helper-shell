@@ -1,6 +1,6 @@
 {
   "name": "@pefish/js-helper-shell",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "types": "./types/shell.d.ts",
   "main": "./lib/shell.js",
   "dependencies": {
