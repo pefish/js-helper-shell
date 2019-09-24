@@ -1,6 +1,4 @@
-import '@pefish/js-node-assist'
 import shelljs from 'shelljs'
-import ErrorHelper from '@pefish/js-error'
 
 declare global {
   namespace NodeJS {
@@ -61,7 +59,7 @@ export default class ShellHelper {
         this.execSync(`mkdir -p ${path}`)
         this.result = this.shell.cd(path)
       } else {
-        throw new ErrorHelper(`\n${this.result['stderr']}`, 0)
+        throw new Error(`\n${this.result['stderr']}`)
       }
     }
     return this
@@ -106,7 +104,7 @@ export default class ShellHelper {
     global.logger.debug(`>>>>>>>> ${str}`)
     this.result = this.shell.exec(str, opts)
     if (this.result['code'] !== 0) {
-      throw new ErrorHelper(`\n${this.result['stderr']}`, 0)
+      throw new Error(`\n${this.result['stderr']}`)
     }
     return this
   }
@@ -115,7 +113,7 @@ export default class ShellHelper {
     global.logger.debug(`>>>>>>>> ${str}`)
     this.result = this.shell.exec(str, Object.assign(opts, { silent: true }))
     if (this.result['code'] !== 0) {
-      throw new ErrorHelper(`\n${this.result['stderr']}`, 0)
+      throw new Error(`\n${this.result['stderr']}`)
     }
     return this
   }
@@ -125,7 +123,7 @@ export default class ShellHelper {
 
     const result = this.shell.exec(str, opts)
     if (result['code'] !== 0) {
-      throw new ErrorHelper(`\n${result['stderr']}`, 0)
+      throw new Error(`\n${result['stderr']}`)
     }
     return result
   }
