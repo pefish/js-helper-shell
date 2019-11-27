@@ -1,21 +1,18 @@
 import shelljs from 'shelljs'
 
-declare global {
-  namespace NodeJS {
-    interface Global {
-      logger: any,
-    }
-  }
-}
-
 export default class ShellHelper {
   private shell
   public result
   private toClean
+  private logger = console
 
   constructor () {
     this.shell = shelljs
     this.toClean = {} // 待清理的处于脱离状态的子进程。应当在父进程退出前清理掉
+  }
+
+  setLogger (logger: any) {
+    this.logger = logger
   }
 
   killProcessGroup (gid: number | string) {
@@ -51,11 +48,11 @@ export default class ShellHelper {
    * @returns {ShellHelper}
    */
   cd (path: string, mkIfNotExist: boolean = false) {
-    global.logger.debug(`>>>>>>>> cd ${path}`)
+    this.logger.debug(`>>>>>>>> cd ${path}`)
     this.result = this.shell.cd(path)
     if (this.result['code'] !== 0) {
       if (mkIfNotExist === true && this.result['stderr'].startsWith('cd: no such file or directory')) {
-        global.logger.info(`目录不存在，创建目录`)
+        this.logger.info(`目录不存在，创建目录`)
         this.execSync(`mkdir -p ${path}`)
         this.result = this.shell.cd(path)
       } else {
@@ -66,7 +63,7 @@ export default class ShellHelper {
   }
 
   existsPath (path: string) {
-    global.logger.debug(`>>>>>>>> 判断目录是否存在`)
+    this.logger.debug(`>>>>>>>> 判断目录是否存在`)
     this.result = this.execSync(`if [ -d "${path}" ]; then echo true; else echo false; fi`, {
       silent: true
     }).result
@@ -79,7 +76,7 @@ export default class ShellHelper {
   }
 
   existsFile (filepath: string) {
-    global.logger.debug(`>>>>>>>> 判断文件是否存在`)
+    this.logger.debug(`>>>>>>>> 判断文件是否存在`)
     this.result = this.execSync(`if [ -f "${filepath}" ]; then echo true; else echo false; fi`, {
       silent: true
     }).result
@@ -101,7 +98,7 @@ export default class ShellHelper {
    * @returns {ShellHelper}
    */
   execSync (str: string, opts: {} = {}) {
-    global.logger.debug(`>>>>>>>> ${str}`)
+    this.logger.debug(`>>>>>>>> ${str}`)
     this.result = this.shell.exec(str, opts)
     if (this.result['code'] !== 0) {
       throw new Error(`\n${this.result['stderr']}`)
@@ -110,7 +107,7 @@ export default class ShellHelper {
   }
 
   execSyncInSilent (str: string, opts: {} = {}) {
-    global.logger.debug(`>>>>>>>> ${str}`)
+    this.logger.debug(`>>>>>>>> ${str}`)
     this.result = this.shell.exec(str, Object.assign(opts, { silent: true }))
     if (this.result['code'] !== 0) {
       throw new Error(`\n${this.result['stderr']}`)
@@ -119,7 +116,7 @@ export default class ShellHelper {
   }
 
   execSyncForResult (str: string, opts: {} = {}) {
-    global.logger.debug(`>>>>>>>> ${str}`)
+    this.logger.debug(`>>>>>>>> ${str}`)
 
     const result = this.shell.exec(str, opts)
     if (result['code'] !== 0) {
@@ -136,7 +133,7 @@ export default class ShellHelper {
    * @returns {child_process}
    */
   execAsync (str: string, cb: (code: number, stdout: string, stderr: string) => void, opts: {} = {}) {
-    global.logger.debug(`>>>>>>>> ${str}`)
+    this.logger.debug(`>>>>>>>> ${str}`)
     this.result = this.shell.exec(str, Object.assign(opts, {
       async: true
     }), cb)
@@ -153,7 +150,7 @@ export default class ShellHelper {
    * @returns {ShellHelper}
    */
   execAsyncDetach (str: string, cb: (code: number) => void = null, unref: boolean = false, opts: {} = {}) {
-    global.logger.debug(`>>>>>>>> ${str}`)
+    this.logger.debug(`>>>>>>>> ${str}`)
     const { spawn } = require('child_process')
 
     const { envs, file, args} = this._parseCommand(str)
