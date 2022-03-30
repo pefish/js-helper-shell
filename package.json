@@ -4,7 +4,7 @@
   "types": "./types/shell.d.ts",
   "main": "./lib/shell.js",
   "dependencies": {
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.5"
   },
   "scripts": {
     "test": "mocha --require ts-node/register src/*.test.ts",
