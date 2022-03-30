@@ -8,11 +8,17 @@ export default class ShellHelper {
 
   constructor () {
     this.shell = shelljs
+    this.shell.env = Object.assign(this.shell.env, process.env)
     this.toClean = {} // 待清理的处于脱离状态的子进程。应当在父进程退出前清理掉
   }
 
   setLogger (logger: any) {
     this.logger = logger
+  }
+
+  withEnv (name: string, value: string): ShellHelper {
+    this.shell.env[name] = value
+    return this
   }
 
   killProcessGroup (gid: number | string) {

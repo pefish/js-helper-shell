@@ -1,6 +1,6 @@
 {
   "name": "@pefish/js-helper-shell",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "types": "./types/shell.d.ts",
   "main": "./lib/shell.js",
   "dependencies": {
@@ -15,6 +15,7 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
     "@types/node": "^11.13.7",
+    "mocha": "^9.2.2",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
   }

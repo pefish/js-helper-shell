@@ -20,16 +20,27 @@ describe('ShellHelper', () => {
   //   }
   // })
 
-  it('execAsyncDetach', async () => {
+  it('withEnv', async () => {
     try {
-      const result = helper.execAsyncDetach(`TEST=test echo 5657`)
-      // global.logger.error(result)
+      const result = helper.withEnv("TEST", "123").execSync("echo $TEST")
+      // console.error("result", result.stdout)
       // result.kill('SIGHUP')
       // assert.strictEqual(result, true)
     } catch (err) {
       assert.throws(() => {}, err)
     }
   })
+
+  // it('execAsyncDetach', async () => {
+  //   try {
+  //     const result = helper.execAsyncDetach(`TEST=test echo 5657`)
+  //     // global.logger.error(result)
+  //     // result.kill('SIGHUP')
+  //     // assert.strictEqual(result, true)
+  //   } catch (err) {
+  //     assert.throws(() => {}, err)
+  //   }
+  // })
 
   // it('killChildProcess', async () => {
   //   try {
